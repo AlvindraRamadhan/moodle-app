@@ -1,6 +1,8 @@
 // File: lib/profil_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:moodle_app/edit_profile_screen.dart';
+import 'package:moodle_app/pengaturan_screen.dart'; // 1. IMPORT THE NEW SETTINGS SCREEN
 
 const Color kDarkBlue = Color(0xFF002F6C);
 const Color kScaffoldBackground = Color(0xFFF0F4F8);
@@ -34,7 +36,7 @@ class ProfilScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildProfileHeader(),
+            _buildProfileHeader(context),
             _buildDetailCard(),
           ],
         ),
@@ -42,8 +44,8 @@ class ProfilScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk header profil berwarna biru
-  Widget _buildProfileHeader() {
+  // Widget for the blue profile header
+  Widget _buildProfileHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       decoration: const BoxDecoration(
@@ -56,6 +58,7 @@ class ProfilScreen extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            // ... (The user info part remains unchanged)
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Icon(Icons.school_outlined, color: Colors.white, size: 40),
@@ -83,6 +86,7 @@ class ProfilScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           const Row(
+            // ... (The stats part remains unchanged)
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _InfoColumn(value: 'Aktif', label: 'Mahasiswa'),
@@ -95,7 +99,12 @@ class ProfilScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const EditProfilScreen()),
+                    );
+                  },
                   icon: const Icon(Icons.edit_outlined, size: 18),
                   label: const Text('Edit Profile'),
                   style: ElevatedButton.styleFrom(
@@ -108,13 +117,23 @@ class ProfilScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(8),
+              // 2. MAKE THE SETTINGS ICON CLICKABLE
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PengaturanScreen()),
+                  );
+                },
+                borderRadius: BorderRadius.circular(8), // for ripple effect shape
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.settings, color: Colors.white),
                 ),
-                child: const Icon(Icons.settings, color: Colors.white),
               )
             ],
           )
@@ -123,7 +142,7 @@ class ProfilScreen extends StatelessWidget {
     );
   }
 
-  // Widget untuk kartu detail pengguna berwarna putih
+  // Widget for the user details card (NO CHANGES)
   Widget _buildDetailCard() {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -158,7 +177,7 @@ class ProfilScreen extends StatelessWidget {
   }
 }
 
-// Widget helper untuk info SKS, Semester, dll.
+// Helper widget for stats (NO CHANGES)
 class _InfoColumn extends StatelessWidget {
   final String value;
   final String label;
@@ -176,7 +195,7 @@ class _InfoColumn extends StatelessWidget {
   }
 }
 
-// Widget helper untuk baris detail (Nama, Jurusan, dll.)
+// Helper widget for detail rows (NO CHANGES)
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;
