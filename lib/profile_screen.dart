@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:moodle_app/edit_profile_screen.dart';
-import 'package:moodle_app/pengaturan_screen.dart'; // 1. IMPORT THE NEW SETTINGS SCREEN
+import 'package:moodle_app/pengaturan_screen.dart';
 
 const Color kDarkBlue = Color(0xFF002F6C);
 const Color kScaffoldBackground = Color(0xFFF0F4F8);
@@ -14,19 +14,29 @@ class ProfilScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: kScaffoldBackground,
+      // Hapus `const` dari AppBar karena sekarang memiliki aksi dinamis
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: kDarkBlue,
         elevation: 0,
         titleSpacing: 0,
-        title: const Row(
+        // Hapus `const` dari Row karena sekarang memiliki GestureDetector
+        title: Row(
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 16.0),
-              child: Icon(Icons.arrow_back, color: Colors.white),
+            // 1. BUNGKUS PADDING DENGAN GESTUREDETECTOR UNTUK AKSI KLIK
+            GestureDetector(
+              onTap: () {
+                // 2. TAMBAHKAN AKSI UNTUK KEMBALI KE LAYAR SEBELUMNYA
+                Navigator.of(context).pop();
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Beri area klik yang lebih luas
+                child: Icon(Icons.arrow_back, color: Colors.white),
+              ),
             ),
-            SizedBox(width: 8),
-            Text(
+            // SizedBox tidak lagi diperlukan jika padding horizontal sudah diatur
+            // const SizedBox(width: 8),
+            const Text(
               'Profil',
               style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
             ),
@@ -58,7 +68,6 @@ class ProfilScreen extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            // ... (The user info part remains unchanged)
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Icon(Icons.school_outlined, color: Colors.white, size: 40),
@@ -86,7 +95,6 @@ class ProfilScreen extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           const Row(
-            // ... (The stats part remains unchanged)
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _InfoColumn(value: 'Aktif', label: 'Mahasiswa'),
@@ -117,7 +125,6 @@ class ProfilScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              // 2. MAKE THE SETTINGS ICON CLICKABLE
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -125,7 +132,7 @@ class ProfilScreen extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const PengaturanScreen()),
                   );
                 },
-                borderRadius: BorderRadius.circular(8), // for ripple effect shape
+                borderRadius: BorderRadius.circular(8),
                 child: Container(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
@@ -142,7 +149,7 @@ class ProfilScreen extends StatelessWidget {
     );
   }
 
-  // Widget for the user details card (NO CHANGES)
+  // Widget for the user details card
   Widget _buildDetailCard() {
     return Container(
       margin: const EdgeInsets.all(16),
@@ -177,7 +184,7 @@ class ProfilScreen extends StatelessWidget {
   }
 }
 
-// Helper widget for stats (NO CHANGES)
+// Helper widget for stats
 class _InfoColumn extends StatelessWidget {
   final String value;
   final String label;
@@ -195,7 +202,7 @@ class _InfoColumn extends StatelessWidget {
   }
 }
 
-// Helper widget for detail rows (NO CHANGES)
+// Helper widget for detail rows
 class _DetailRow extends StatelessWidget {
   final String label;
   final String value;

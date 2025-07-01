@@ -1,6 +1,10 @@
 // File: lib/beranda_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:moodle_app/catatan_screen.dart';
+import 'package:moodle_app/materi_screen.dart';
+import 'package:moodle_app/profile_screen.dart'; // <-- 1. IMPORT PROFIL SCREEN
+import 'package:moodle_app/tugas_screen.dart';
 
 // Definisikan warna yang akan digunakan
 const Color kDarkBlue = Color(0xFF002F6C);
@@ -39,7 +43,7 @@ class BerandaScreen extends StatelessWidget {
                       const SizedBox(height: 24),
 
                       // Menu Cepat (Tugas, Materi, dll)
-                      _buildQuickMenu(),
+                      _buildQuickMenu(context),
                       const SizedBox(height: 24),
 
                       // Kartu Informasi Vertikal
@@ -62,14 +66,14 @@ class BerandaScreen extends StatelessWidget {
             ),
           ),
           // Header Kustom (menumpuk di atas konten)
-          _buildCustomHeader(),
+          _buildCustomHeader(context), // <-- Pass context to the header
         ],
       ),
     );
   }
 
-  // Widget helper untuk Header
-  Widget _buildCustomHeader() {
+  // Widget helper untuk Header (sudah dimodifikasi)
+  Widget _buildCustomHeader(BuildContext context) { // <-- Receive context
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 48, 16, 20),
       decoration: const BoxDecoration(
@@ -90,9 +94,19 @@ class BerandaScreen extends StatelessWidget {
               Text('Universitas Ahmad Dahlan', style: TextStyle(color: Colors.white70, fontSize: 14)),
             ],
           ),
-          CircleAvatar(
-            backgroundColor: Colors.white.withOpacity(0.9),
-            child: const Icon(Icons.person, color: kDarkBlue),
+          // <-- 2. WRAP AVATAR DENGAN GESTUREDETECTOR
+          GestureDetector(
+            onTap: () {
+              // <-- 3. TAMBAHKAN NAVIGASI KE PROFILSCREEN
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfilScreen()),
+              );
+            },
+            child: CircleAvatar(
+              backgroundColor: Colors.white.withOpacity(0.9),
+              child: const Icon(Icons.person, color: kDarkBlue),
+            ),
           ),
         ],
       ),
@@ -164,32 +178,70 @@ class BerandaScreen extends StatelessWidget {
   }
 
   // Widget helper untuk Menu Cepat
-  Widget _buildQuickMenu() {
+  Widget _buildQuickMenu(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buildQuickMenuItem(icon: Icons.assignment, label: 'Tugas'),
-        _buildQuickMenuItem(icon: Icons.book, label: 'Materi'),
-        _buildQuickMenuItem(icon: Icons.edit_note, label: 'Catatan'),
-        _buildQuickMenuItem(icon: Icons.school, label: 'Kuliah'),
+        _buildQuickMenuItem(
+          icon: Icons.assignment,
+          label: 'Tugas',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const TugasScreen()),
+            );
+          },
+        ),
+        _buildQuickMenuItem(
+          icon: Icons.book,
+          label: 'Materi',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MateriScreen()),
+            );
+          },
+        ),
+        _buildQuickMenuItem(
+          icon: Icons.edit_note,
+          label: 'Catatan',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CatatanScreen()),
+            );
+          },
+        ),
+        _buildQuickMenuItem(icon: Icons.school, label: 'Kuliah', onTap: () {}),
       ],
     );
   }
 
-  Widget _buildQuickMenuItem({required IconData icon, required String label}) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: const BoxDecoration(
-            color: kOrange,
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: kDarkBlue, size: 28),
+  Widget _buildQuickMenuItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                color: kOrange,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: kDarkBlue, size: 28),
+            ),
+            const SizedBox(height: 8),
+            Text(label, style: const TextStyle(color: kTextColor, fontWeight: FontWeight.w500)),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(label, style: const TextStyle(color: kTextColor, fontWeight: FontWeight.w500)),
-      ],
+      ),
     );
   }
 
